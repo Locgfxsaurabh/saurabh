@@ -8,7 +8,6 @@ Future submitData({
   required String email,
   required String phone,
   required String photo,
-  // required String phone,
 }) async {
   var request = http.MultipartRequest(
       'POST', Uri.parse('http://dev3.xicom.us/xttest/savedata.php'));
