@@ -217,8 +217,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                   name: 'Phone',
                   child: TextFormField(
                     keyboardType: TextInputType.number,
-                    onChanged: (v) {
-                      setState(() {});
+                    onChanged: (val) {
+                      setState(() {
+                        if (phoneController.text.trim().length == 10) {
+                          FocusScope.of(context).unfocus();
+                        }
+                      });
                     },
                     controller: phoneController,
                     decoration: InputDecoration(
