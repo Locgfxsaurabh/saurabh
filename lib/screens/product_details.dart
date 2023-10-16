@@ -62,6 +62,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           backgroundColor: Colors.white,
           elevation: 0,
           automaticallyImplyLeading: false,
+          centerTitle: false,
           title: Text(
             "Product details",
             style: TextStyle(color: Colors.black),
@@ -69,7 +70,8 @@ class _ProductDetailsState extends State<ProductDetails> {
           leadingWidth: 40,
           leading: Padding(
             padding: const EdgeInsets.only(left: 20),
-            child: InkWell(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
               onTap: () {
                 Navigator.pop(context);
               },
