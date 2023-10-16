@@ -36,8 +36,6 @@ class _HomeState extends State<Home> {
 
     resp.then((value) {
       if (mounted) {
-        // getImages.clear();
-
         if (value['status'] == 'success') {
           setState(() {
             for (var v in value['images']) {
@@ -50,8 +48,6 @@ class _HomeState extends State<Home> {
           setState(() {
             isLoading = false;
           });
-
-          // isLoading = false;
         }
       }
     });
@@ -98,7 +94,6 @@ class _HomeState extends State<Home> {
           style: TextStyle(color: Colors.black),
         ),
         leadingWidth: 40,
-
       ),
       body: isLoading
           ? Loading()
@@ -116,6 +111,8 @@ class _HomeState extends State<Home> {
                         if (i < getImages.length) {
                           return GestureDetector(
                             onTap: () {
+                              setState(() {});
+
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

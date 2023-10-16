@@ -6,18 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:saurabh_xicom_test/globals/widgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../apis/send_data_api.dart';
+import '../globals/widgets.dart';
 
 class ProductDetails extends StatefulWidget {
   final String image;
   final String id;
-  const ProductDetails({Key? key, required this.image, required this.id})
-      : super(key: key);
+  const ProductDetails({
+    Key? key,
+    required this.image,
+    required this.id,
+  }) : super(key: key);
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -29,10 +32,27 @@ class _ProductDetailsState extends State<ProductDetails> {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
 
-  File pickedImage = File("");
-  final ImagePicker _imgPicker = ImagePicker();
-
   bool show = false;
+
+  @override
+  void initState() {
+    super.initState();
+    downloadAndSaveImage();
+  }
+
+  late String localImagePath;
+
+  Future<void> downloadAndSaveImage() async {
+    final documentDirectory = await getApplicationDocumentsDirectory();
+    final filePath = '${documentDirectory.path}/image.png';
+    File file = File(filePath);
+    await file.writeAsString(widget.image);
+    if (mounted) {
+      setState(() {
+        localImagePath = filePath;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,49 +119,49 @@ class _ProductDetailsState extends State<ProductDetails> {
                 SizedBox(
                   height: 20,
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    XFile? v =
-                        await _imgPicker.pickImage(source: ImageSource.gallery);
-                    if (v != null) {
-                      setState(
-                        () {
-                          pickedImage = File(v.path);
-                        },
-                      );
-                    }
-                    print(pickedImage);
-                  },
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.grey,
-                        child: ClipOval(
-                          child: pickedImage.path.isEmpty
-                              ? Image.asset(
-                                  'assets/icons/Frame1000002321.png',
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.file(
-                                  pickedImage,
-                                  width: 1.sw,
-                                  height: 420,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 60,
-                        right: 0.0,
-                        child: Image.asset(
-                          'assets/icons/Frame1000003015.png',
-                          // color: k8267AC,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // GestureDetector(
+                //   onTap: () async {
+                //     XFile? v =
+                //         await _imgPicker.pickImage(source: ImageSource.gallery);
+                //     if (v != null) {
+                //       setState(
+                //         () {
+                //           pickedImage = File(v.path);
+                //         },
+                //       );
+                //     }
+                //     print(pickedImage);
+                //   },
+                //   child: Stack(
+                //     children: [
+                //       CircleAvatar(
+                //         radius: 50,
+                //         backgroundColor: Colors.grey,
+                //         child: ClipOval(
+                //           child: pickedImage.path.isEmpty
+                //               ? Image.asset(
+                //                   'assets/icons/Frame1000002321.png',
+                //                   fit: BoxFit.cover,
+                //                 )
+                //               : Image.file(
+                //                   pickedImage,
+                //                   width: 1.sw,
+                //                   height: 420,
+                //                   fit: BoxFit.cover,
+                //                 ),
+                //         ),
+                //       ),
+                //       Positioned(
+                //         top: 60,
+                //         right: 0.0,
+                //         child: Image.asset(
+                //           'assets/icons/Frame1000003015.png',
+                //           // color: k8267AC,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 SizedBox(
                   height: 20,
                 ),
@@ -218,8 +238,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       if (firstNameController.text.isNotEmpty &&
                           lastNameController.text.isNotEmpty &&
                           emailController.text.isNotEmpty &&
-                          phoneController.text.isNotEmpty &&
-                          pickedImage.path.isNotEmpty) {
+                          phoneController.text.isNotEmpty) {
                         if (emailController.text.contains("@")) {
                           setState(() {
                             show = !show;
@@ -229,9 +248,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                               show = false;
                             });
                           });
+                          setState(() {});
                           submitData(
-                            photo:
-                                pickedImage.isAbsolute ? pickedImage.path : '',
+                            photo: localImagePath,
                             firstName: firstNameController.text,
                             lastName: lastNameController.text,
                             email: emailController.text,
@@ -239,7 +258,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ).then((value) async {
                             if (value['status'] == 'success') {
                               Fluttertoast.showToast(msg: value['message']);
-
                             } else {
                               Fluttertoast.showToast(msg: value['message']);
                             }
@@ -249,9 +267,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                               msg: 'Please Enter a valid email');
                         }
                       } else {
-
-                        Fluttertoast.showToast(
-                            msg: 'Please Add All Details including image');
+                        Fluttertoast.showToast(msg: 'Please Add All Details');
                       }
                     },
                     child: show
