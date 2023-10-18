@@ -44,7 +44,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   Future<void> downloadAndSaveImage() async {
     final documentDirectory = await getApplicationDocumentsDirectory();
-    final filePath = '${documentDirectory.path}/image.png';
+    final filePath = '${documentDirectory.path}';
     File file = File(filePath);
     await file.writeAsString(widget.image);
     if (mounted) {
@@ -240,40 +240,42 @@ class _ProductDetailsState extends State<ProductDetails> {
                   alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: () {
-                      // if (emailController.text.contains("@")) {
-                      if (firstNameController.text.isNotEmpty &&
-                          lastNameController.text.isNotEmpty &&
-                          emailController.text.isNotEmpty &&
-                          phoneController.text.isNotEmpty) {
-                        if (emailController.text.contains("@")) {
-                          setState(() {
-                            show = !show;
-                          });
-                          Timer timer = Timer(Duration(seconds: 2), () {
+                      print(localImagePath);
+                      if (emailController.text.contains("@")) {
+                        if (firstNameController.text.isNotEmpty &&
+                            lastNameController.text.isNotEmpty &&
+                            emailController.text.isNotEmpty &&
+                            phoneController.text.isNotEmpty) {
+                          if (emailController.text.contains("@")) {
                             setState(() {
-                              show = false;
+                              show = !show;
                             });
-                          });
-                          setState(() {});
-                          submitData(
-                            photo: localImagePath,
-                            firstName: firstNameController.text,
-                            lastName: lastNameController.text,
-                            email: emailController.text,
-                            phone: phoneController.text,
-                          ).then((value) async {
-                            if (value['status'] == 'success') {
-                              Fluttertoast.showToast(msg: value['message']);
-                            } else {
-                              Fluttertoast.showToast(msg: value['message']);
-                            }
-                          });
+                            Timer timer = Timer(Duration(seconds: 2), () {
+                              setState(() {
+                                show = false;
+                              });
+                            });
+                            setState(() {});
+                            submitData(
+                              photo: localImagePath,
+                              firstName: firstNameController.text,
+                              lastName: lastNameController.text,
+                              email: emailController.text,
+                              phone: phoneController.text,
+                            ).then((value) async {
+                              if (value['status'] == 'success') {
+                                Fluttertoast.showToast(msg: value['message']);
+                              } else {
+                                Fluttertoast.showToast(msg: value['message']);
+                              }
+                            });
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: 'Please Enter a valid email');
+                          }
                         } else {
-                          Fluttertoast.showToast(
-                              msg: 'Please Enter a valid email');
+                          Fluttertoast.showToast(msg: 'Please Add All Details');
                         }
-                      } else {
-                        Fluttertoast.showToast(msg: 'Please Add All Details');
                       }
                     },
                     child: show

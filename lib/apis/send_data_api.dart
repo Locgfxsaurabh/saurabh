@@ -18,7 +18,7 @@ Future submitData({
     'phone': phone,
   });
   request.files.add(await http.MultipartFile.fromPath('user_image', photo));
-
+  print(request.fields);
   http.StreamedResponse response = await request.send();
   var resp = jsonDecode(await response.stream.bytesToString());
   if (response.statusCode == 200) {
