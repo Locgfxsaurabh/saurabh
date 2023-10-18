@@ -44,7 +44,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   Future<void> downloadAndSaveImage() async {
     final documentDirectory = await getApplicationDocumentsDirectory();
-    final filePath = '${documentDirectory.path}';
+    final filePath = '${documentDirectory.path}/image.png';
     File file = File(filePath);
     await file.writeAsString(widget.image);
     if (mounted) {
