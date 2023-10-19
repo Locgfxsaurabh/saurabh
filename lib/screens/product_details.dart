@@ -241,42 +241,42 @@ class _ProductDetailsState extends State<ProductDetails> {
                   child: GestureDetector(
                     onTap: () {
                       print(localImagePath);
-                      if (emailController.text.contains("@")) {
-                        if (firstNameController.text.isNotEmpty &&
-                            lastNameController.text.isNotEmpty &&
-                            emailController.text.isNotEmpty &&
-                            phoneController.text.isNotEmpty) {
-                          if (emailController.text.contains("@")) {
+                      // if (emailController.text.contains("@")) {
+                      if (firstNameController.text.isNotEmpty &&
+                          lastNameController.text.isNotEmpty &&
+                          emailController.text.isNotEmpty &&
+                          phoneController.text.isNotEmpty) {
+                        if (emailController.text.contains("@")) {
+                          setState(() {
+                            show = !show;
+                          });
+                          Timer timer = Timer(Duration(seconds: 2), () {
                             setState(() {
-                              show = !show;
+                              show = false;
                             });
-                            Timer timer = Timer(Duration(seconds: 2), () {
-                              setState(() {
-                                show = false;
-                              });
-                            });
-                            setState(() {});
-                            submitData(
-                              photo: localImagePath,
-                              firstName: firstNameController.text,
-                              lastName: lastNameController.text,
-                              email: emailController.text,
-                              phone: phoneController.text,
-                            ).then((value) async {
-                              if (value['status'] == 'success') {
-                                Fluttertoast.showToast(msg: value['message']);
-                              } else {
-                                Fluttertoast.showToast(msg: value['message']);
-                              }
-                            });
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: 'Please Enter a valid email');
-                          }
+                          });
+                          setState(() {});
+                          submitData(
+                            photo: localImagePath,
+                            firstName: firstNameController.text,
+                            lastName: lastNameController.text,
+                            email: emailController.text,
+                            phone: phoneController.text,
+                          ).then((value) async {
+                            if (value['status'] == 'success') {
+                              Fluttertoast.showToast(msg: value['message']);
+                            } else {
+                              Fluttertoast.showToast(msg: value['message']);
+                            }
+                          });
                         } else {
-                          Fluttertoast.showToast(msg: 'Please Add All Details');
+                          Fluttertoast.showToast(
+                              msg: 'Please Enter a valid email');
                         }
+                      } else {
+                        Fluttertoast.showToast(msg: 'Please Add All Details');
                       }
+                      // }
                     },
                     child: show
                         ? Container(
